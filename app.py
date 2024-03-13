@@ -25,7 +25,6 @@ path = 'ressources/'
 
 # Chargement des fichiers
 vectorizer_CV = joblib.load(path + 'countvectorizer.joblib')
-vectorizer_TFIDF = joblib.load(path + 'tfidfvectorizer.joblib')
 mlb = joblib.load(path + 'multilabelbinarizer.joblib')
 
 with open(path + 'stop_words.pkl', 'rb') as f:
@@ -42,15 +41,10 @@ with open(path + 'lda.pkl', 'rb') as file:
 
 
 # Définir un dictionnaire de fonctions de modèles et de leurs paramètres associés
-model_functions_supervised = {
-    "LogisticRegression (best model)": {"function": pipelines["LogisticRegression"].predict},
-    "SGDClassifier": {"function": pipelines["SGDClassifier"].predict}
-}
-
-model_functions_unsupervised = {
-    "CountVectorizer": {"function": pipelines["CountVectorizer"].transform},
-    "TFIDFVectorizer": {"function": pipelines["TFIDFVectorizer"].transform},
-    "LDA + CountVectorizer": {"function": pipelines["LDA"].transform}
+model_functions = {
+    "LogisticRegression": {"function": pipelines["LogisticRegression"].predict},
+    "SGDClassifier": {"function": pipelines["SGDClassifier"].predict},
+    "CountVectorizer": {"function": pipelines["CountVectorizer"].transform}
 }
 
 # Définition de l'interface utilisateur
@@ -64,18 +58,8 @@ button_style = "background-color: black; color: white; border-radius: 5px;"
 
 # Sélection du modèle à utiliser
 st.sidebar.header("Models")
-
-with st.sidebar.container():
-    choice = st.selectbox(" ", [" ", "Supervised models", "Non-supervised models"])
-    model_choice = None
-
-    if choice == "Supervised models":
         with st.sidebar.container():
-            model_choice = st.selectbox(" ", model_functions_supervised.keys())
-
-    if choice == "Non-supervised models":
-        with st.sidebar.container():
-            model_choice = st.selectbox(" ", model_functions_unsupervised.keys())
+            model_choice = st.selectbox(" ", model_functions.keys())
 
 
 # Saisie du titre et du texte à utiliser
