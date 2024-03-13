@@ -58,8 +58,9 @@ button_style = "background-color: black; color: white; border-radius: 5px;"
 
 # Sélection du modèle à utiliser
 st.sidebar.header("Models")
-        with st.sidebar.container():
-            model_choice = st.selectbox(" ", model_functions.keys())
+
+with st.sidebar.container():
+    model_choice = st.selectbox(" ", model_functions.keys())
 
 
 # Saisie du titre et du texte à utiliser
