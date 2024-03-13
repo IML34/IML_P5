@@ -58,10 +58,9 @@ button_style = "background-color: black; color: white; border-radius: 5px;"
 
 # Sélection du modèle à utiliser
 st.sidebar.header("Models")
-
+model_choice = None
 with st.sidebar.container():
     model_choice = st.selectbox(" ", model_functions.keys())
-
 
 # Saisie du titre et du texte à utiliser
 title = st.text_input("Your Title goes here :")
@@ -80,15 +79,12 @@ else:
         # Concaténer le titre et le message en une seule chaîne
         user_input = title + " " + post
 
-        # Récupérer la fonction pour les modèles supervisés
-        if model_choice in model_functions_supervised:
-            model_function = model_functions_supervised[model_choice]["function"]
-            tag_transform = lambda output: list(mlb.inverse_transform(output)[0])
-
-        # Récupérer la fonctionpour les modèles non supervisés
-        elif model_choice in model_functions_unsupervised:
-            model_function = model_functions_unsupervised[model_choice]["function"]
+        # Récupérer la fonction pour les modèles
+        model_function = model_functions_supervised[model_choice]["function"]
+        if model_choice == "CountVectorizer":
             tag_transform = lambda output: list(t[0] for t in output[0])
+        else:
+            tag_transform = lambda output: list(mlb.inverse_transform(output)[0])        
 
         # Appliquer le modèle choisi à la chaîne d'entrée
         output = model_function(user_input)
