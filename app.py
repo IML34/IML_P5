@@ -25,7 +25,7 @@ path = 'ressources/'
 
 # Chargement des fichiers
 vectorizer_CV = joblib.load(path + 'countvectorizer.joblib')
-mlb = joblib.load(path + 'multilabelbinarizer.joblib')
+#mlb = joblib.load(path + 'multilabelbinarizer.joblib')
 
 with open(path + 'stop_words.pkl', 'rb') as f:
     stop_words = dill.load(f)
@@ -38,8 +38,6 @@ with open(path + 'pipelines.pkl', 'rb') as file:
 
 # Définir un dictionnaire de fonctions de modèles et de leurs paramètres associés
 model_functions = {
-#    "LogisticRegression": {"function": pipelines["LogisticRegression"].predict},
-#    "SGDClassifier": {"function": pipelines["SGDClassifier"].predict},
     "CountVectorizer": {"function": pipelines["CountVectorizer"].transform}
 }
 
@@ -53,41 +51,28 @@ button_style = "background-color: black; color: white; border-radius: 5px;"
 
 
 # Sélection du modèle à utiliser
-st.sidebar.header("Models")
-model_choice = None
-with st.sidebar.container():
-    model_choice = st.selectbox(" ", model_functions.keys())
+model_choice = "CountVectorizer"
 
 # Saisie du titre et du texte à utiliser
 title = st.text_input("Your Title goes here :")
 post = st.text_area("Your Text goes there :", height=250)
 
+# Génération des tags si l'utilisateur a cliqué sur le bouton et a fourni des données
+if st.button("Tags") and title and post and (model_choice is not None or ""):
 
-# Si aucune approche ni aucun modèle ne sont sélectionnés, afficher un message d'erreur
-if model_choice is None:
-    st.error("Please pick a model")
+    # Concaténer le titre et le message en une seule chaîne
+    user_input = title + " " + post
 
-else:
+    # Récupérer la fonction pour les modèles
+    model_function = model_functions[model_choice]["function"]
+    tag_transform = lambda output: list(t[0] for t in output[0])
 
-    # Génération des tags si l'utilisateur a cliqué sur le bouton et a fourni des données
-    if st.button("Tags") and title and post and (model_choice is not None or ""):
+    # Appliquer le modèle choisi à la chaîne d'entrée
+    output = model_function(user_input)
 
-        # Concaténer le titre et le message en une seule chaîne
-        user_input = title + " " + post
+    # Extraire les tags prédits de la sortie
+    tags = tag_transform(output)
 
-        # Récupérer la fonction pour les modèles
-        model_function = model_functions[model_choice]["function"]
-        if model_choice == "CountVectorizer":
-            tag_transform = lambda output: list(t[0] for t in output[0])
-        else:
-            tag_transform = lambda output: list(mlb.inverse_transform(output)[0])        
-
-        # Appliquer le modèle choisi à la chaîne d'entrée
-        output = model_function(user_input)
-
-        # Extraire les tags prédits de la sortie
-        tags = tag_transform(output)
-
-        # Impression des tags
-        buttons = "  ".join([f'<button style="{button_style}">{text}</button>' for text in tags])
-        st.markdown(buttons, unsafe_allow_html=True)
+    # Impression des tags
+    buttons = "  ".join([f'<button style="{button_style}">{text}</button>' for text in tags])
+    st.markdown(buttons, unsafe_allow_html=True)
