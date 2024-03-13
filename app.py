@@ -80,7 +80,7 @@ else:
         user_input = title + " " + post
 
         # Récupérer la fonction pour les modèles
-        model_function = model_functions_supervised[model_choice]["function"]
+        model_function = model_functions[model_choice]["function"]
         if model_choice == "CountVectorizer":
             tag_transform = lambda output: list(t[0] for t in output[0])
         else:
