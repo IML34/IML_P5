@@ -1,4 +1,4 @@
-dill==0.3.8
+dill
 joblib==1.1.0
 html5lib==1.1
 nltk==3.7
