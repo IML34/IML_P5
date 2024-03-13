@@ -58,7 +58,7 @@ title = st.text_input("Your Title goes here :")
 post = st.text_area("Your Text goes there :", height=250)
 
 # Génération des tags si l'utilisateur a cliqué sur le bouton et a fourni des données
-if st.button("Tags") and title and post and (model_choice is not None or ""):
+if st.button("Tags") and title and post:
 
     # Concaténer le titre et le message en une seule chaîne
     user_input = title + " " + post
