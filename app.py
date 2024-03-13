@@ -36,14 +36,10 @@ with open(path + 'top_500_tags.pkl', 'rb') as f:
 with open(path + 'pipelines.pkl', 'rb') as file:
     pipelines = dill.load(file)
 
-with open(path + 'lda.pkl', 'rb') as file:
-    lda = dill.load(file)
-
-
 # Définir un dictionnaire de fonctions de modèles et de leurs paramètres associés
 model_functions = {
-    "LogisticRegression": {"function": pipelines["LogisticRegression"].predict},
-    "SGDClassifier": {"function": pipelines["SGDClassifier"].predict},
+#    "LogisticRegression": {"function": pipelines["LogisticRegression"].predict},
+#    "SGDClassifier": {"function": pipelines["SGDClassifier"].predict},
     "CountVectorizer": {"function": pipelines["CountVectorizer"].transform}
 }
 
